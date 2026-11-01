@@ -100,7 +100,7 @@ fn as_len(n: u256::U256) -> i64, bool {
     let hi: u64 = n.w[1];
     let lo: u64 = n.w[0];
     let v = (hi << 32) | lo;
-    return v as! i64, true;
+    return v as i64, true;
 }
 
 fn decode_bytes(src: u8[:]) -> u8[>..], bool {

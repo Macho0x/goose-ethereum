@@ -21,8 +21,8 @@ fn is_zero(a: U256) -> bool {
 
 fn from_u64(v: u64) -> U256 {
     var a = zero();
-    a.w[0] = (v & 0xffffffff) as! u32;
-    a.w[1] = (v >> 32) as! u32;
+    a.w[0] = (v & 0xffffffff) as u32;
+    a.w[1] = (v >> 32) as u32;
     return a;
 }
 
@@ -45,10 +45,10 @@ fn to_be(a: U256) -> u8[32] {
     for i in 0..8 {
         let w = a.w[7 - i];
         let o = i * 4;
-        out[o] = (w >> 24) as! u8;
-        out[o + 1] = (w >> 16) as! u8;
-        out[o + 2] = (w >> 8) as! u8;
-        out[o + 3] = w as! u8;
+        out[o] = (w >> 24) as u8;
+        out[o + 1] = ((w >> 16) & 0xff) as u8;
+        out[o + 2] = ((w >> 8) & 0xff) as u8;
+        out[o + 3] = (w & 0xff) as u8;
     }
     return out;
 }
@@ -69,8 +69,8 @@ fn add(a: U256, b: U256) -> U256, bool {
         let aw: u64 = a.w[i];
         let bw: u64 = b.w[i];
         let s = aw + bw + carry;
-        r.w[i] = (s & 0xffffffff) as! u32;
-        carry = (s >> 32) as! u32;
+        r.w[i] = (s & 0xffffffff) as u32;
+        carry = (s >> 32) as u32;
     }
     if carry != 0 { return zero(), false; }
     return r, true;
@@ -84,10 +84,10 @@ fn sub(a: U256, b: U256) -> U256, bool {
         let bw: u64 = b.w[i];
         let bv = bw + borrow;
         if av >= bv {
-            r.w[i] = (av - bv) as! u32;
+            r.w[i] = (av - bv) as u32;
             borrow = 0;
         } else {
-            r.w[i] = (av + 0x100000000 - bv) as! u32;
+            r.w[i] = (av + 0x100000000 - bv) as u32;
             borrow = 1;
         }
     }
@@ -113,7 +113,7 @@ fn mul(a: U256, b: U256) -> U256, bool {
         if acc[i] != 0 { return zero(), false; }
     }
     var r = zero();
-    for i in 0..8 { r.w[i] = acc[i] as! u32; }
+    for i in 0..8 { r.w[i] = acc[i] as u32; }
     return r, true;
 }
 
@@ -149,10 +149,10 @@ fn div(a: U256, b: U256) -> U256, bool {
             let bw: u64 = b.w[i];
             let bv = bw + borrow;
             if av >= bv {
-                rem[i] = (av - bv) as! u32;
+                rem[i] = (av - bv) as u32;
                 borrow = 0;
             } else {
-                rem[i] = (av + 0x100000000 - bv) as! u32;
+                rem[i] = (av + 0x100000000 - bv) as u32;
                 borrow = 1;
             }
         }
@@ -161,13 +161,13 @@ fn div(a: U256, b: U256) -> U256, bool {
 
     fn bit_at(i: i64) -> bool {
         let limb = i / 32;
-        let sh = (i % 32) as! u32;
+        let sh = (i % 32) as u32;
         return ((a.w[limb] >> sh) & 1) == 1;
     }
 
     fn put_bit(i: i64) {
         let limb = i / 32;
-        let sh = (i % 32) as! u32;
+        let sh = (i % 32) as u32;
         var one: u32 = 1;
         q.w[limb] = q.w[limb] | (one << sh);
     }
@@ -188,7 +188,7 @@ fn shl(a: U256, n: i64) -> U256, bool {
     if n < 0 { return zero(), false; }
     if n >= 256 { return zero(), true; }
     let limbs = n / 32;
-    let bits = (n % 32) as! u32;
+    let bits = (n % 32) as u32;
     var r = zero();
     for i in 0..8 {
         let src = i - limbs;
@@ -209,7 +209,7 @@ fn shr(a: U256, n: i64) -> U256, bool {
     if n < 0 { return zero(), false; }
     if n >= 256 { return zero(), true; }
     let limbs = n / 32;
-    let bits = (n % 32) as! u32;
+    let bits = (n % 32) as u32;
     var r = zero();
     for i in 0..8 {
         let src = i + limbs;

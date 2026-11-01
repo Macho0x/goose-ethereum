@@ -6,7 +6,7 @@
 
 <p align="center">
   256-bit integers, ABI words, and JSON-RPC bytes for <a href="https://github.com/aardappel/goose">Goose</a><br>
-  <strong>0.2</strong> · <a href="LICENSE">Apache-2.0</a>
+  <strong>0.2.1</strong> · <a href="LICENSE">Apache-2.0</a>
 </p>
 
 `u256` is eight little-endian limbs, not the secp256k1 field. `abi` builds Ethereum call words and the 4-byte selector. `rpc` writes JSON-RPC 2.0 request bytes and reads a result. Keccak-256 is in [goose-crypto](https://github.com/Macho0x/goose-crypto). This package does not open a socket and does not sign transactions.
