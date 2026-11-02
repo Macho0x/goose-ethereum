@@ -6,7 +6,7 @@
 
 <p align="center">
   256-bit integers, ABI words, and JSON-RPC bytes for <a href="https://github.com/aardappel/goose">Goose</a><br>
-  <strong>0.2.1</strong> · <a href="LICENSE">Apache-2.0</a>
+  <strong>0.2.2</strong> · <a href="LICENSE">Apache-2.0</a>
 </p>
 
 `u256` is eight little-endian limbs, not the secp256k1 field. `abi` builds Ethereum call words and the 4-byte selector. `rpc` writes JSON-RPC 2.0 request bytes and reads a result. Keccak-256 is in [goose-crypto](https://github.com/Macho0x/goose-crypto). This package does not open a socket and does not sign transactions.
@@ -57,6 +57,17 @@ A good run prints `ethereum ok`.
 `abi` appends into a caller-owned `u8[>..]`. `bytes`, `string`, and a uint256 array append a length and then the payload, padded to 32 bytes. They do not write a head offset. The offset depends on the other arguments in the call.
 
 `rpc` writes requests with the Goose `json` writer. `result` reads a response with the `json` reader. A string result is the decoded text. Any other result value is the raw JSON of that value. A missing result, a null result, a JSON error, or malformed JSON returns false.
+
+## Benchmarks
+
+`bench.goose` times this package. The row names stay fixed, so a clang run before a change and a clang run after it compare.
+
+```sh
+goose build -o ethereum-bench bench.goose --cc clang
+./ethereum-bench
+```
+
+`goose bench.goose` runs in TinyCC. That is not a timing result. Numbers depend on the machine, so this page does not publish them.
 
 ## License
 
